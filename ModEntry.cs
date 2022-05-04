@@ -20,7 +20,13 @@ namespace ClayMap
             helper.Events.Display.RenderedWorld += Display_RenderedWorld;
             helper.ConsoleCommands.Add(
                 "claymap_setdepth",
-                "Sets the number of future clay spots to draw.\n\nUsage:claymap_setdepth <value>\n-value:integer depth", this.SetDepth);
+                "Sets the number of future clay spots to draw.\n\nUsage:claymap_setdepth <value>\n-value:integer depth",
+                this.SetDepth);
+
+            helper.ConsoleCommands.Add(
+                "claymap_toggle",
+                "toggles the clay map on/off",
+                this.Toggle);
         }
 
         private void GameLoop_UpdateTicked(object sender, UpdateTickedEventArgs e)
@@ -52,6 +58,16 @@ namespace ClayMap
             drawer.Depth = depth;
             this.Monitor.Log($"clay map depth set to {depth}.", LogLevel.Info);
             drawer.Reset();
+        }
+
+        private void Toggle(string command, string[] args)
+        {
+            if (drawer == null)
+            {
+                this.Monitor.Log($"clay map not active", LogLevel.Info);
+                return;
+            }
+            drawer.Toggle();
         }
     }
 }

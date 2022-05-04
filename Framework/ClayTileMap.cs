@@ -19,6 +19,7 @@ namespace ClayMap.Framework
         private uint NumHoed;
         private string LocationName;
         private Rectangle SourceRect;
+        private bool Active;
 
         private List<List<Vector2>> Tiles;
         public ClayTileMap()
@@ -27,6 +28,16 @@ namespace ClayMap.Framework
             LocationName = "";
             Tiles = new List<List<Vector2>>();
             SourceRect = Rectangle.Empty;
+            Active = true;
+        }
+
+        public void Toggle()
+        {
+            Active = !Active;
+            if (Active)
+            {
+                Reset();
+            }
         }
 
         public void Reset(bool rollover = false)
@@ -58,7 +69,7 @@ namespace ClayMap.Framework
             {
                 SourceRect = GameLocation.getSourceRectForObject(330);
             }
-            if (Game1.currentLocation == null || Game1.stats == null) return;
+            if (Game1.currentLocation == null || Game1.stats == null || !Active) return;
 
             if (Game1.stats.DirtHoed != NumHoed)
             {
@@ -79,7 +90,7 @@ namespace ClayMap.Framework
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (Tiles.Count == 0) return;
+            if (Tiles.Count == 0 || !Active) return;
 
             for (int i = 0; i < Depth; ++i)
             {
