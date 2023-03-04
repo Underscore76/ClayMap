@@ -9,7 +9,7 @@ namespace ClayMap.Framework
 	public class WinterRootMap : SObjectTileMap
 	{
 		private uint NumHoed;
-        public override string Name => "WinterForageMap";
+        public override string Name => "WinterRootMap";
 
         public WinterRootMap() : base(412)
 		{
@@ -47,7 +47,7 @@ namespace ClayMap.Framework
     public class SnowYamMap : SObjectTileMap
     {
         private uint NumHoed;
-        public override string Name => "WinterForageMap";
+        public override string Name => "SnowYamMap";
 
         public SnowYamMap() : base(416)
         {
