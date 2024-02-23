@@ -10,7 +10,7 @@ namespace ClayMap.Framework
 {
 	public abstract class SObjectTileMap
 	{
-        private bool Active;
+        public bool Active;
         private string LocationName;
         public int Depth = 1;
         public string ItemId;
@@ -35,6 +35,7 @@ namespace ClayMap.Framework
 
         public virtual void Reset(bool rollover = false)
         {
+            if (Game1.currentLocation == null || !Active) return;
             LocationName = Game1.currentLocation.Name;
             if (rollover)
             {
@@ -89,9 +90,25 @@ namespace ClayMap.Framework
             }
         }
 
+
+        public void SetDepth(int depth)
+        {
+            Depth = depth;
+            Reset();
+        }
+        
         public void Toggle()
         {
             Active = !Active;
+            if (Active)
+            {
+                Reset();
+            }
+        }
+
+        public void SetVisible(bool state)
+        {
+            Active = state;
             if (Active)
             {
                 Reset();

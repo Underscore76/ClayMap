@@ -79,7 +79,6 @@ namespace ClayMap.Framework
 
         public override void Reset(bool rollover = false)
         {
-            NumHoed = Game1.stats.DirtHoed;
             base.Reset(rollover);
         }
     }
