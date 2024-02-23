@@ -1,7 +1,12 @@
 ﻿using System;
-using StardewValley;
-using StardewModdingAPI;
 using Microsoft.Xna.Framework;
+using StardewValley;
+using StardewValley.Tools;
+using StardewValley.Locations;
+using StardewValley.Enchantments;
+using StardewValley.Extensions;
+using StardewModdingAPI;
+using StardewValley.GameData.Locations;
 
 namespace ClayMap.Framework
 {
@@ -9,7 +14,7 @@ namespace ClayMap.Framework
     {
         private uint NumHoed;
         public override string Name => "ClayMap";
-        public ClayTileMap() : base(330)
+        public ClayTileMap() : base("(O)330")
         {
             NumHoed = uint.MaxValue;
         }
@@ -17,13 +22,18 @@ namespace ClayMap.Framework
         protected override bool EvalTile(Vector2 tile, int depth)
         {
             if (!TileInfo.IsTillable(Game1.currentLocation, tile)) return false;
-            Random r = new Random(((int)tile.X) * 2000 + ((int)tile.Y) * 77 + (int)Game1.uniqueIDForThisGame / 2 + (int)Game1.stats.DaysPlayed + (int)Game1.stats.DirtHoed + depth);
+            Random r = Utility.CreateDaySaveRandom(tile.X * 2000, tile.Y * 77, Game1.stats.DirtHoed + depth);
             GameLocation loc = Game1.currentLocation;
-            if (!loc.IsFarm && loc.IsOutdoors && Game1.GetSeasonForLocation(loc).Equals("winter") && r.NextDouble() < 0.08 && !(loc is StardewValley.Locations.Desert))
+            if (!loc.IsFarm && loc.IsOutdoors && Game1.GetSeasonForLocation(loc) == Season.Winter && r.NextDouble() < 0.08 && !(loc is Desert))
             {
                 return false;
             }
-            return r.NextDouble() < 0.03;
+            LocationData data = Game1.currentLocation.GetData();
+            if (loc.IsOutdoors && r.NextBool(data?.ChanceForClay ?? 0.03))
+			{
+				return true;
+			}
+            return false;
         }
 
         protected override bool ShouldReset()

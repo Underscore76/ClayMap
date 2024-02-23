@@ -4,6 +4,7 @@ using StardewValley;
 using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StardewValley.ItemTypeDefinitions;
 
 namespace ClayMap.Framework
 {
@@ -12,16 +13,18 @@ namespace ClayMap.Framework
         private bool Active;
         private string LocationName;
         public int Depth = 1;
-        public int ParentSheetIndex;
+        public string ItemId;
         private List<List<Vector2>> Tiles;
+        protected Texture2D SourceTexture;
         protected Rectangle SourceRect;
 
-        public SObjectTileMap(int parentSheetIndex)
+        public SObjectTileMap(string itemId)
         {
-            ParentSheetIndex = parentSheetIndex;
+            ItemId = itemId;
             LocationName = "";
             Tiles = new List<List<Vector2>>();
             SourceRect = Rectangle.Empty;
+            SourceTexture = null;
             Active = true;
         }
 
@@ -55,9 +58,11 @@ namespace ClayMap.Framework
         #region public methods
         public void Update(IMonitor monitor, IModHelper helper)
         {
-            if (SourceRect == Rectangle.Empty && Game1.objectSpriteSheet != null)
+            if (SourceRect == Rectangle.Empty || SourceTexture == null)
             {
-                SourceRect = GameLocation.getSourceRectForObject(ParentSheetIndex);
+                ParsedItemData itemData = ItemRegistry.GetDataOrErrorItem(ItemId);
+                SourceTexture = itemData.GetTexture();
+                SourceRect = itemData.GetSourceRect(0, itemData.SpriteIndex);
             }
             if (Game1.currentLocation == null || Game1.stats == null || !Active) return;
 
@@ -120,7 +125,7 @@ namespace ClayMap.Framework
         private void DrawObjectText(SpriteBatch spriteBatch, Vector2 tile, string text)
         {
             Rectangle destRect = DrawHelpers.TransformToLocal(DrawHelpers.TileToRect(tile));
-            spriteBatch.Draw(Game1.objectSpriteSheet, destRect, SourceRect, Color.White);
+            spriteBatch.Draw(SourceTexture, destRect, SourceRect, Color.White);
             DrawHelpers.DrawCenteredTextInRect(spriteBatch, destRect, text, Color.White);
         }
         #endregion

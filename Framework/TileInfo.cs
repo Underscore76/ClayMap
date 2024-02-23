@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StardewValley.TerrainFeatures;
 using xTile.Dimensions;
 using Microsoft.Xna.Framework;
 
@@ -25,7 +26,7 @@ namespace ClayMap.Framework
             if (careObjects)
             {
                 // objects & large terrain features
-                if (location.objects.ContainsKey(tile) || location.largeTerrainFeatures.Any(p => p.tilePosition.Value == tile))
+                if (location.objects.ContainsKey(tile) || location.largeTerrainFeatures.Any(p => p.Tile == tile))
                     return true;
             }
             return false;
