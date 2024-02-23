@@ -1,7 +1,7 @@
 ﻿{
   "Name": "ClayMap",
   "Author": "Underscore",
-  "Version": "2.0.0",
+  "Version": "2.0.0-sdvalpha.20240222",
   "Description": "Draws the clay tiles over the game window",
   "UniqueID": "underscore.clay_map",
   "EntryDll": "ClayMap.dll",
